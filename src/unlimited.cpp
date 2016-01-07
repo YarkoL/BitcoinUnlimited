@@ -107,6 +107,7 @@ void UnlimitedPushTxns(CNode* dest)
 
 void announceExcessiveBlock()
 {
+    BUComments.clear();
     BUComments.push_back("EB" + boost::lexical_cast<std::string>(excessiveBlockSize/1000000));
     BUComments.push_back("AD" + boost::lexical_cast<std::string>(excessiveAcceptDepth));
 }
@@ -226,6 +227,7 @@ Value setexcessiveblock(const Array& params, bool fHelp)
         excessiveBlockSize = params[0].get_uint64();
     else {
         string temp = params[0].get_str();
+        if (temp[0] == '-') boost::throw_exception( boost::bad_lexical_cast() );
         excessiveBlockSize = boost::lexical_cast<unsigned int>(temp);
     }
 
@@ -233,6 +235,7 @@ Value setexcessiveblock(const Array& params, bool fHelp)
         excessiveAcceptDepth = params[1].get_uint64();
     else {
         string temp = params[1].get_str();
+        if (temp[0] == '-') boost::throw_exception( boost::bad_lexical_cast() );
         excessiveAcceptDepth = boost::lexical_cast<unsigned int>(temp);
     }
     announceExcessiveBlock();
@@ -273,6 +276,7 @@ Value setminingmaxblock(const Array& params, bool fHelp)
         arg = params[0].get_uint64();
     else {
         string temp = params[0].get_str();
+        if (temp[0] == '-') boost::throw_exception( boost::bad_lexical_cast() );
         arg = boost::lexical_cast<uint64_t>(temp);
     }
 
