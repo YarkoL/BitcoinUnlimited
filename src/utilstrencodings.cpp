@@ -27,6 +27,15 @@ string SanitizeString(const string& str)
         if (safeChars.find(str[i]) != std::string::npos)
             strResult.push_back(str[i]);
     }
+    //BU: do not show commentstring if it exceeds 10 bytes
+    if (strResult.find("(") != std::string::npos && strResult.find(")") != std::string::npos)
+    {
+        std::size_t pos = strResult.find("(");
+        std::string s = strResult.substr(pos);
+        std::string ann = s.substr(0, s.find(")"));
+        if (ann.size() > 10) strResult.erase(pos, ann.size());
+    }
+
     return strResult;
 }
 

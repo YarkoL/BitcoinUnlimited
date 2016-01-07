@@ -91,6 +91,7 @@ std::string FormatFullVersion()
     return CLIENT_BUILD;
 }
 
+
 /** 
  * Format the subversion field according to BIP 14 spec (https://github.com/bitcoin/bips/blob/master/bip-0014.mediawiki) 
  */

@@ -64,7 +64,6 @@ static const bool DEFAULT_UPNP = false;
 /** The maximum number of entries in mapAskFor */
 static const size_t MAPASKFOR_MAX_SZ = MAX_INV_SZ;
 
-
 unsigned int ReceiveFloodSize();
 unsigned int SendBufferSize();
 

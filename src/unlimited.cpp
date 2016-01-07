@@ -29,6 +29,8 @@ unsigned int excessiveBlockSize = DEFAULT_EXCESSIVE_BLOCK_SIZE;
 unsigned int excessiveAcceptDepth = DEFAULT_EXCESSIVE_ACCEPT_DEPTH;
 unsigned int maxMessageSizeMultiplier = DEFAULT_MAX_MESSAGE_SIZE_MULTIPLIER;
 
+std::vector<std::string> BUComments = std::vector<std::string>();
+
 // Variables for traffic shaping
 CLeakyBucket receiveShaper(DEFAULT_MAX_RECV_BURST, DEFAULT_AVE_RECV);
 CLeakyBucket sendShaper(DEFAULT_MAX_SEND_BURST, DEFAULT_AVE_SEND);
@@ -103,12 +105,18 @@ void UnlimitedPushTxns(CNode* dest)
         dest->PushMessage("inv", vInv);
 }
 
+void announceExcessiveBlock()
+{
+    BUComments.push_back("EB" + boost::lexical_cast<std::string>(excessiveBlockSize/1000000));
+    BUComments.push_back("AD" + boost::lexical_cast<std::string>(excessiveAcceptDepth));
+}
+
 void UnlimitedSetup(void)
 {
     maxGeneratedBlock = GetArg("-blockmaxsize", DEFAULT_MAX_GENERATED_BLOCK_SIZE);
     excessiveBlockSize = GetArg("-excessiveblocksize", DEFAULT_EXCESSIVE_BLOCK_SIZE);
     excessiveAcceptDepth = GetArg("-excessiveacceptdepth", DEFAULT_EXCESSIVE_ACCEPT_DEPTH);
-
+    announceExcessiveBlock();
     //  Init network shapers
     int64_t rb = GetArg("-receiveburst", DEFAULT_MAX_RECV_BURST);
     // parameter is in KBytes/sec, leaky bucket is in bytes/sec.  But if it is "off" then don't multiply
@@ -204,7 +212,7 @@ Value getexcessiveblock(const Array& params, bool fHelp)
 
 Value setexcessiveblock(const Array& params, bool fHelp)
 {
-    if (fHelp || params.size() >= 3)
+    if (fHelp || params.size() < 2 || params.size() >= 3)
         throw runtime_error(
             "setexcessiveblock blockSize acceptDepth\n"
             "\nSet the excessive block size and accept depth.  Excessive blocks will not be used in the active chain or relayed until they are several blocks deep in the blockchain.  This discourages the propagation of blocks that you consider excessively large.  However, if the mining majority of the network builds upon the block then you will eventually accept it, maintaining consensus."
@@ -227,7 +235,7 @@ Value setexcessiveblock(const Array& params, bool fHelp)
         string temp = params[1].get_str();
         excessiveAcceptDepth = boost::lexical_cast<unsigned int>(temp);
     }
-
+    announceExcessiveBlock();
     return Value::null;
 }
 

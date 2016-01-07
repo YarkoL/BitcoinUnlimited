@@ -146,10 +146,12 @@ bool UnlimitedModel::setData(const QModelIndex& index, const QVariant& value, in
           break;
         case ExcessiveBlockSize:
           excessiveBlockSize = value.toUInt();
+          announceExcessiveBlock();
           settings.setValue("excessiveBlockSize", excessiveBlockSize);
           break;
         case ExcessiveAcceptDepth:
           excessiveAcceptDepth = value.toUInt();
+          announceExcessiveBlock();
           settings.setValue("excessiveAcceptDepth",excessiveAcceptDepth);
           break;
         case UseReceiveShaping:
