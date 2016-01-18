@@ -18,6 +18,7 @@
 #include "txmempool.h"
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
+#include <iomanip>  
 
 using namespace std;
 using namespace json_spirit;
@@ -108,7 +109,9 @@ void UnlimitedPushTxns(CNode* dest)
 void announceExcessiveBlock()
 {
     BUComments.clear();
-    BUComments.push_back("EB" + boost::lexical_cast<std::string>(excessiveBlockSize/1000000));
+    std::stringstream eb;
+    eb << fixed << setprecision(1) << (excessiveBlockSize/1000000); 
+    BUComments.push_back("EB" + eb.str());
     BUComments.push_back("AD" + boost::lexical_cast<std::string>(excessiveAcceptDepth));
 }
 
