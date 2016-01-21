@@ -4410,9 +4410,9 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
                                     SendSeededBloomFilter(pfrom);
                                 } else {
                                     LogPrint("thin", "Requesting Regular Block %s peer=%d\n", inv2.hash.ToString(), pfrom->id);
-                                    MarkBlockAsInFlight(pfrom->GetId(), inv.hash, chainparams.GetConsensus());
-                                    vToFetch.push_back(inv2);
                                 }
+                                MarkBlockAsInFlight(pfrom->GetId(), inv.hash, chainparams.GetConsensus());
+                                vToFetch.push_back(inv2);
                             }
                         }
                         else {
@@ -4888,7 +4888,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
     }
 
 
-    else if (strCommand == "xblocktxs" && !fImporting && !fReindex) // handle Re-requested thinblock transactions
+    else if (strCommand == "xblocktx" && !fImporting && !fReindex) // handle Re-requested thinblock transactions
     {
         CXThinBlockTx thinBlockTx;
         vRecv >> thinBlockTx;
@@ -4922,7 +4922,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
     }
 
 
-    else if (strCommand == "get_xblocktxs" && !fImporting && !fReindex) // return Re-requested thinblock transactions
+    else if (strCommand == "get_xblocktx" && !fImporting && !fReindex) // return Re-requested thinblock transactions
     {
         CXThinBlockTx thinBlockTx;
         vRecv >> thinBlockTx;
