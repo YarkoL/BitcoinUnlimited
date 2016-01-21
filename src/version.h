@@ -35,7 +35,7 @@ static const int BIP0031_VERSION = 60000;
 static const int MEMPOOL_GD_VERSION = 60002;
 
 //! Thinblocks enabled in this version
-static const int THINBLOCKS_VERSION = 80001;
+static const int THINBLOCKS_VERSION = 80000;
 
 
 #endif // BITCOIN_VERSION_H
