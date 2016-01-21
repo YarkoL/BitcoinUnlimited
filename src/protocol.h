@@ -154,6 +154,7 @@ enum {
     // MSG_FILTERED_BLOCK should not appear in any invs except as a part of getdata.
     MSG_FILTERED_BLOCK,
     MSG_THINBLOCK,
+    MSG_XTHINBLOCK,
 };
 
 #endif // BITCOIN_PROTOCOL_H

@@ -43,6 +43,37 @@ public:
     }
 };
 
+class CXThinBlock
+{
+public:
+    CBlockHeader header;
+    std::vector<uint64_t> vTxHashes; // List of all transactions id's in the block
+    std::map<uint256, CTransaction> mapMissingTx; // map of transactions that did not match the bloom filter
+    bool collision;
+
+public:
+
+    /**
+     * Create from a CThinBlock, finding missing transactions according to filter
+     */
+    CXThinBlock(const CBlock& block, CBloomFilter& filter);
+
+    CXThinBlock() {}
+
+    int64_t GetBlockTime() { return header.GetBlockTime(); }
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+        READWRITE(header);
+        READWRITE(vTxHashes);
+        READWRITE(mapMissingTx);
+
+    }
+};
+
+
 // This class is used for retrieving a list of still missing transactions after receiving a "thinblock" message.
 // The CThinBlockTx when recieved can be used to fill in the missing transactions after which it is sent
 // back to the requestor.
@@ -61,6 +92,34 @@ public:
     CThinBlockTx(uint256 blockHash, std::vector<uint256>& vHashesToRequest);
 
     CThinBlockTx() {}
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+        READWRITE(blockhash);
+        READWRITE(mapTx);
+    }
+};
+
+// This class is used for retrieving a list of still missing transactions after receiving a "thinblock" message.
+// The CXThinBlockTx when recieved can be used to fill in the missing transactions after which it is sent
+// back to the requestor.  This class uses a 64bit hash as opposed to the normal 256bit hash.
+class CXThinBlockTx
+{
+public:
+    /** Public only for unit testing */
+    uint256 blockhash;
+    std::map<uint64_t, CTransaction> mapTx; // map of missing transactions
+
+public:
+
+    /**
+     * Create from a CThinBlockTx, finding missing transactions
+     */
+    CXThinBlockTx(uint256 blockHash, std::vector<uint64_t>& vHashesToRequest);
+
+    CXThinBlockTx() {}
 
     ADD_SERIALIZE_METHODS;
 

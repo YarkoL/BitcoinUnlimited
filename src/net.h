@@ -22,6 +22,7 @@
 
 #include <deque>
 #include <stdint.h>
+#include <bitset>
 
 #ifndef WIN32
 #include <arpa/inet.h>
@@ -290,6 +291,7 @@ public:
     // If we've received a thin block from this peer, it's stored here until we have enough data to complete it.
     CBlock thinBlock;
     std::vector<uint256> thinBlockHashes;
+    std::vector<uint64_t> xThinBlockHashes;
     int thinBlockWaitingForTxns;   // if -1 then not currently waiting
     std::map<uint256, uint64_t> mapThinBlocksInFlight; // map of the hashes of thin blocks in flight with the time they were requested.
     std::map<uint256, CTransaction> mapThinBlockTxEvictionCache; // map of transactions that were evicted between requesting and receiving a thinblock
