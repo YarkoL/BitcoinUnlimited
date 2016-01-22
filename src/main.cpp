@@ -4800,9 +4800,10 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
            int nRegularBlockSize = pfrom->thinBlock.GetSerializeSize(SER_NETWORK, CBlock::CURRENT_VERSION);
            pfrom->AddInventoryKnown(inv);
            LogPrint("thin", "Reassembled thin block for %s (%d bytes)\n", pfrom->thinBlock.GetHash().ToString(),nRegularBlockSize);
-           LogPrint("thin", "Thinblock compression: %d%% of %d bytes Number of txs: %d Collision: %d \n",
+           LogPrint("thin", "Thinblock compression: %d%% of %d bytes Txs in block: %d Txs in mempool: %d Collision: %d \n",
                     (int)(100 * nSizeThinBlock/nRegularBlockSize), nRegularBlockSize,
                     pfrom->thinBlock.vtx.size(),
+                    (int)mempool.mapTx.size(),
                     collision);
            HandleBlockMessage(pfrom, strCommand, pfrom->thinBlock, inv);
        }
